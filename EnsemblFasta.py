@@ -43,6 +43,7 @@ class EnsemblFasta():
         seq = ""
         prevId = ""
         with open(fastaRef, 'r') as f:
+
             for line in f:
                 if ">" == line[0]:
                     # asserting the regex don't fail...
@@ -52,6 +53,7 @@ class EnsemblFasta():
                         geneName = found.group(2)
                         self._transcripts[alternate] = geneName
                     else:
+                        print("EnsemblFasta: NOT FOUND")
                         print(line)
                         exit()
 

@@ -46,45 +46,9 @@ class GraphAlign():
     # Space between blocks
     BLOCKSPACE = 10
 
+    
     @staticmethod
-    def oldDrawAlign(draw, aln, height):
-        """ Draw the aligned sequence of a read to a reference"""
-
-        center = height + BOXHEIGHT // 2 + 1  # centerline height
-        col = "BLUE" if aln.direction == "+" else "RED"
-        charWidth = draw.textsize(" ")[0]
-        # Offset prior to the ref
-        offRef = aln.startRef
-        # mapped sequence
-        mSeq = aln.paddedSequence[aln.startRead:aln.endRead]
-        textDraw = charWidth * offRef + HRMARGIN + ORDINATE
-        tCol = "GREY"
-        for i, c in enumerate(mSeq):
-            if (offRef + i < aln.ref.size):
-                if(c == aln.ref.sequence[offRef + i]):
-                    tCol = "DARKGREEN"
-                elif(c == "-"):
-                    tCol = "BLUE"
-                elif(c == "_"):
-                    tCol = "DARKBLUE"
-                elif(c == "|"):
-                    tCol = "PURPLE"
-                else:
-                    tCol = "RED"
-                draw.text((textDraw,
-                           center),
-                          c,
-                          fill=tCol)
-                textDraw += charWidth
-            else:
-                break
-
-            # Read name
-            draw.text((HRMARGIN, center), aln.read.name,
-                      fill=col)
-
-    @staticmethod
-    def drawAlign(draw, aln, height):
+    def drawCigarAlign(draw, aln, height):
         """ Draw the aligned sequence of a read to a reference"""
         # Setting 'constants' for this function
         center = height + BOXHEIGHT // 2 + 1  # centerline height
@@ -145,12 +109,31 @@ class GraphAlign():
         draw.text((HRMARGIN, center), aln.read.name,
                   fill=col)
 
-    @staticmethod
-    def drawData(data, reference, save=0, show=1, name="unknown", path="./"):
-        """Create and save/display the reads and overlaps."""
 
-        # Adjusting length to font size
-        #  /!\ TODO : make it better...
+    @staticmethod
+    def drawBoxes(draw,aln,height):
+        """ Draw the reads on a reference as boxes"""
+        # Setting 'constants' for this function
+        center = height + BOXHEIGHT // 2 + 1  # centerline height
+        col = "BLUE" if aln.direction == "+" else "RED"
+        charWidth = draw.textsize(" ")[0]
+
+        drawPos = aln.startRef * charWidth + HRMARGIN + ORDINATE
+        blockPos = aln.startRef % BLOCKSIZE
+        spaces = BLOCKSPACE
+
+        # if blocksize is set, add spaces before first nucleotide
+        if(BLOCKSIZE != 0):
+            drawPos += (int((aln.startRef) / BLOCKSIZE) * BLOCKSPACE) * charWidth
+        ncCol = "DARKGREY"
+        insertFirst = False
+        for readPos, mapping in enumerate(aln.cigarGen):
+            pass
+
+
+    @staticmethod
+    def drawData(data, reference, save=False, show=True, name="unknown", path="./", cigar = False):
+        """Create and save/display the reads and overlaps."""
 
         length = 1
 

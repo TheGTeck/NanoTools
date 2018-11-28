@@ -17,6 +17,9 @@ import re
 
 
 class Align():
+    
+    global PATTERN
+    PATTERN = re.compile('([MIDNSHPX=])')
 
     def __init__(self, r1, r2, st1, end1, st2, end2, cig=None, direction="+"):
 
@@ -28,7 +31,6 @@ class Align():
         self._endRef = end2     # End point of the mapping on reference
         self._direction = direction  # Relative orientation (read to reference)
         self._cigar = cig       # CIGAR format of the mapping
-        self.pattern = re.compile('([MIDNSHPX=])')
 
     # CIGAR
     @property
@@ -78,7 +80,7 @@ class Align():
     def cigarGen(self):
 
         # turn cigar into tuple of values
-        values = self.pattern.split(self._cigar)[:-1]
+        values = PATTERN.split(self._cigar)[:-1]
         posR1 = self._startRef
         posR2 = 0
         mapping = (None, None, None)  # alignement tuple
